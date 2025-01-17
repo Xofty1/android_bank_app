@@ -15,6 +15,9 @@
         android:theme="@style/Theme.BankApp"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.CardDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
