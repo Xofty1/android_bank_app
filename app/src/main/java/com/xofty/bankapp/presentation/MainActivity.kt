@@ -39,26 +39,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.xofty.bankapp.datasource.retrofit.model.CardInfo
+import com.xofty.bankapp.datasource.retrofit.model.CardInfoDto
+import com.xofty.bankapp.domain.model.CardInfo
 import com.xofty.bankapp.domain.viewModel.MainActivityViewModel
 import com.xofty.bankapp.ui.theme.BankAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             BankAppTheme {
                 MainScreen(viewModel) { cardInfo, errorMessage ->
-                    if (cardInfo != null) {
+                    if (cardInfo?.number != null) {
+
                         startActivity(Intent(this, CardDetailActivity::class.java).apply {
                             putExtra("CARD_INFO", cardInfo)
                         })
                     } else if (errorMessage != null) {
                         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Карта не найдена", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -97,8 +101,7 @@ fun MainScreen(viewModel: MainActivityViewModel, onCardResult: (CardInfo?, Strin
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp)
-                    .focusable(false)
-                    .foc,
+                    .focusable(false),
                 readOnly = true
             )
             Button(

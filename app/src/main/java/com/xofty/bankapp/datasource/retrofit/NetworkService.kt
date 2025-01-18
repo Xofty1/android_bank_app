@@ -2,12 +2,9 @@ package com.xofty.bankapp.datasource.retrofit
 
 import android.util.Log
 import com.google.gson.GsonBuilder
-import com.xofty.bankapp.datasource.retrofit.model.CardInfo
+import com.xofty.bankapp.datasource.retrofit.model.CardInfoDto
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
@@ -40,7 +37,7 @@ class NetworkService {
         retrofit.create(BinApi::class.java)
     }
 
-    suspend fun getCardInfo(bin: Int): Result<CardInfo> {
+    suspend fun getCardInfo(bin: Int): Result<CardInfoDto> {
         return try {
             val response = binApi.getCardInfo(bin).awaitResponse()
             if (response.isSuccessful) {

@@ -13,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.xofty.bankapp.datasource.retrofit.model.CardInfo
+import com.xofty.bankapp.datasource.retrofit.model.CardInfoDto
+import com.xofty.bankapp.domain.model.CardInfo
 import com.xofty.bankapp.ui.theme.BankAppTheme
 
 class CardDetailActivity : ComponentActivity() {
