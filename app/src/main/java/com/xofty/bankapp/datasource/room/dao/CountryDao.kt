@@ -15,4 +15,7 @@ interface CountryDao {
 
     @Query("SELECT * FROM country WHERE id = :id")
     suspend fun getById(id: Long): CountryEntity?
+
+    @Query("SELECT * FROM country WHERE numeric = :numeric LIMIT 1")
+    suspend fun getByNumeric(numeric: String?): CountryEntity?
 }

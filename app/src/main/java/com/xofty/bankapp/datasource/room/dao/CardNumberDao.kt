@@ -15,4 +15,7 @@ interface CardNumberDao {
 
     @Query("SELECT * FROM card_number WHERE id = :id")
     suspend fun getById(id: Long): CardNumberEntity?
+
+    @Query("SELECT * FROM card_number WHERE length = :length AND luhn = :luhn LIMIT 1")
+    suspend fun getByLengthAndLuhn(length: Int?, luhn: Boolean?): CardNumberEntity?
 }

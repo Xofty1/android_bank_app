@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.xofty.bankapp.datasource.retrofit.model.CardInfoDto
 import com.xofty.bankapp.domain.model.CardInfo
@@ -79,6 +80,8 @@ fun MainScreen(viewModel: MainActivityViewModel, onCardResult: (CardInfo?, Strin
     val currentCard by viewModel.currentCard.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
+    val context = LocalContext.current
+
     LaunchedEffect(currentCard, errorMessage) {
         if (isRequest) {
             onCardResult(currentCard, errorMessage)
@@ -112,15 +115,30 @@ fun MainScreen(viewModel: MainActivityViewModel, onCardResult: (CardInfo?, Strin
                 modifier = Modifier
                     .weight(0.25f)
                     .height(56.dp),
-                enabled = (bin.length in 6..8) && bin.toIntOrNull() != null, // Кнопка активна только при валидном значении
-                shape = MaterialTheme.shapes.small, // Стандартная форма кнопки
+                enabled = (bin.length in 6..8) && bin.toIntOrNull() != null,
+                shape = MaterialTheme.shapes.small,
                 colors = ButtonDefaults.buttonColors()
             ) {
                 Text(text = "→")
             }
         }
 
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Кнопка перехода на экран истории
+        Button(
+            onClick = {
+                context.startActivity(Intent(context, HistoryActivity::class.java))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(56.dp)
+        ) {
+            Text(text = "История запросов")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -129,7 +147,6 @@ fun MainScreen(viewModel: MainActivityViewModel, onCardResult: (CardInfo?, Strin
                 .align(Alignment.CenterHorizontally)
         ) {
             items(count) { number ->
-
                 if (number == -1)
                     DeleteCard {
                         if (bin.isNotEmpty()) bin = bin.dropLast(1)
@@ -142,7 +159,6 @@ fun MainScreen(viewModel: MainActivityViewModel, onCardResult: (CardInfo?, Strin
         }
     }
 }
-
 
 @Composable
 fun DeleteCard(onClick: () -> Unit) {

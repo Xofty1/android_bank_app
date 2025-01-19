@@ -15,4 +15,7 @@ interface BankDao {
 
     @Query("SELECT * FROM bank WHERE id = :id")
     suspend fun getById(id: Long): BankEntity?
+
+    @Query("SELECT * FROM bank WHERE name = :name LIMIT 1")
+    suspend fun getByName(name: String?): BankEntity?
 }

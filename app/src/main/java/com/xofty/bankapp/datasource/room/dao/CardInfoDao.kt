@@ -15,7 +15,7 @@ interface CardInfoDao {
     @Insert
     suspend fun insert(cardInfo: CardInfoEntity)
 
-    @Query("SELECT * FROM card_info")
+    @Query("SELECT * FROM card_info ORDER BY id DESC")
     suspend fun getAll(): List<CardInfoEntity>
 
     @Transaction
@@ -27,13 +27,25 @@ interface CardInfoDao {
         databaseService: DatabaseService
     ) {
         // Вставляем Bank, если он есть
-        val bankId = bank?.let { databaseService.insertBank(it) } ?: 0
+        val bankId = bank?.let { bankEntity ->
+            val existingBank = databaseService.getBankByName(bankEntity.name)
+            existingBank?.id ?: databaseService.insertBank(bankEntity)
+        } ?: 0
 
         // Вставляем CardNumber, если он есть
-        val cardNumberId = cardNumber?.let { databaseService.insertCardNumber(it) } ?: 0
+        val cardNumberId = cardNumber?.let { cardNumberEntity ->
+            val existingCardNumber = databaseService.getCardNumberByLengthAndLuhn(
+                cardNumberEntity.length,
+                cardNumberEntity.luhn
+            )
+            existingCardNumber?.id ?: databaseService.insertCardNumber(cardNumberEntity)
+        } ?: 0
 
         // Вставляем Country, если он есть
-        val countryId = country?.let { databaseService.insertCountry(it) } ?: 0
+        val countryId = country?.let { countryEntity ->
+            val existingCountry = databaseService.getCountryByNumeric(countryEntity.numeric)
+            existingCountry?.id ?: databaseService.insertCountry(countryEntity)
+        } ?: 0
 
         // Проверяем, что все ID корректны
         if (cardNumberId == 0L || countryId == 0L || bankId == 0L) {
@@ -48,4 +60,5 @@ interface CardInfoDao {
         )
         insert(fullCardInfo)
     }
+
 }

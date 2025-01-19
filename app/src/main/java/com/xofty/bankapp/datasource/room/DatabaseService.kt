@@ -1,6 +1,7 @@
 package com.xofty.bankapp.datasource.room
 
 import android.content.Context
+import android.health.connect.datatypes.units.Length
 import com.xofty.bankapp.datasource.room.dao.BankDao
 import com.xofty.bankapp.datasource.room.dao.CardInfoDao
 import com.xofty.bankapp.datasource.room.dao.CardNumberDao
@@ -76,5 +77,22 @@ class DatabaseService @Inject constructor(db: CardInfoDatabase) {
 
         // Вставляем CardInfo
         insertCardInfo(fullCardInfo)
+    }
+
+    suspend fun getBankByName(name: String?): BankEntity?{
+        return bankDao.getByName(name)
+    }
+
+    suspend fun getCardNumberByLengthAndLuhn(length: Int?, luhn: Boolean?): CardNumberEntity?{
+        return cardNumberDao.getByLengthAndLuhn(length, luhn)
+    }
+
+    suspend fun getCountryByNumeric(numeric: String?): CountryEntity?{
+        return countryDao.getByNumeric(numeric)
+    }
+
+
+    suspend fun getAllCardInfo(): List<CardInfoEntity> {
+        return cardInfoDao.getAll()
     }
 }
